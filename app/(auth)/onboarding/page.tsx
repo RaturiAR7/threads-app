@@ -11,9 +11,9 @@ async function Page() {
 
   const userData = {
     id: user.id,
-    objectId: userInfo?._id,
-    username: userInfo ? userInfo?.username : user.username,
-    name: userInfo ? userInfo?.name : user.firstName ?? "",
+    objectId: userInfo?._id || userInfo?._id,
+    username: user.username || userInfo?.username,
+    name: user.fullName || userInfo?.name,
     bio: userInfo ? userInfo?.bio : "",
     image: userInfo ? userInfo?.image : user.imageUrl,
   };
