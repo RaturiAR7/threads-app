@@ -9,6 +9,7 @@ async function Page() {
 
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/unboarding");
+
   return (
     <>
       <h1 className='head-text'>Create Thread</h1>
