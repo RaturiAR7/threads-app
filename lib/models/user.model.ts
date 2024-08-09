@@ -7,8 +7,12 @@ const userSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    required: true,
     unique: true,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
   },
   image: String,
   bio: String,
@@ -31,4 +35,5 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
+
 export default User;

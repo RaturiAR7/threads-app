@@ -39,7 +39,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     /////Calculate the number of posts to skip
     const skipAmount = (pageNumber - 1) * pageSize;
     ///Fetch the posts that have no parents (top-level threads...)
-    const postsQuery = Thread.findOne({
+    const postsQuery = Thread.find({
       parentId: { $in: [null, undefined] },
     })
       .sort({ createdAt: "desc" })
