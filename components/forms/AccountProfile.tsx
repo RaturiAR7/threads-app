@@ -131,9 +131,6 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   />
                 )}
               </FormLabel>
-              {imageSizeError && (
-                <p className='text-red-500'>{imageSizeError}</p>
-              )}
               <FormControl className='flex-1 text-base1-semibold text-gray-200'>
                 <Input
                   type='file'
@@ -147,6 +144,9 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             </FormItem>
           )}
         />
+        {imageSizeError && (
+          <p className='text-red-500 text-x-small-semibold'>{imageSizeError}</p>
+        )}
         <FormField
           control={form.control}
           name='name'
