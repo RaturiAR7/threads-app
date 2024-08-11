@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 export default async function Home() {
   const user = await currentUser();
   const result = await fetchPosts(1, 30);
-  const userInfo = await fetchUser(user.id);
+  let userInfo;
+  if (user?.id) userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
 
   return (
