@@ -22,7 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      signInFallbackRedirectUrl={
+        process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL
+      }
+      signUpFallbackRedirectUrl={
+        process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL
+      }
+    >
       <html lang='en'>
         <body className={inter.className}>
           <Topbar />
