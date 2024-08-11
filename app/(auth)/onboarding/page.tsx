@@ -7,7 +7,6 @@ async function Page() {
   if (!user) return null; // to avoid typescript warnings
 
   const userInfo = {};
-  if (userInfo?.onboarded) redirect("/");
 
   const userData = {
     id: user.id,
