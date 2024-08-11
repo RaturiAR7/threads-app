@@ -45,7 +45,6 @@ const Comment = ({ threadId, currentUserImg, currentUserId }: Props) => {
     );
     form.reset();
   };
-  console.log("Hello", currentUserImg);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='comment-form'>

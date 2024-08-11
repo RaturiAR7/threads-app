@@ -17,7 +17,6 @@ function ProfileHeader({
   imgUrl,
   bio,
 }: Props) {
-  console.log("Image", name);
   return (
     <div className='flex w-full flex-col justify-start'>
       <div className='flex items-center justify-between'>

@@ -105,7 +105,6 @@ export async function addCommentToThread(
   path: string
 ) {
   try {
-    console.log("Hello", commentText);
     connectToDB();
     ////Adding a comment
     ////Find the original thread by its ID

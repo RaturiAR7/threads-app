@@ -28,7 +28,7 @@ export default function RootLayout({
     >
       <html lang='en'>
         <body className={`${inter.className} bg-dark-1`}>
-          <main className='w-full h-screen flex justify-center items-center'>
+          <main className='w-full h-full flex min-h-screen justify-center items-center'>
             {children}
           </main>
         </body>
