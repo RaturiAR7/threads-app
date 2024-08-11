@@ -39,6 +39,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   const pathName = usePathname();
 
   const [files, setFiles] = useState<File[]>([]);
+  const [imageSizeError, setImageSizeError] = useState("");
   const { startUpload } = useUploadThing("media");
 
   const form = useForm<z.infer<typeof UserValidation>>({
@@ -55,9 +56,15 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     fieldChange: (value: string) => void
   ) => {
     e.preventDefault();
+    setImageSizeError("");
     const fileReader = new FileReader();
     if (e.target.files && e.target.files.length) {
       const file = e.target.files[0];
+      // Check file size (1 MB = 1024 * 1024 bytes)
+      if (file.size > 1024 * 1024) {
+        setImageSizeError("Image size should be less than 1 MB");
+        return;
+      }
       setFiles(Array.from(e.target.files));
 
       if (!file.type.includes("image")) return;
@@ -124,6 +131,9 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   />
                 )}
               </FormLabel>
+              {imageSizeError && (
+                <p className='text-red-500'>{imageSizeError}</p>
+              )}
               <FormControl className='flex-1 text-base1-semibold text-gray-200'>
                 <Input
                   type='file'
