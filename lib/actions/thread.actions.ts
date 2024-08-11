@@ -7,13 +7,11 @@ import { connectToDB } from "../mongoose";
 interface Params {
   text: string;
   author: string;
-  communityId: string | null;
   path: string;
 }
 export async function createThread({
   text,
   author,
-  communityId,
   path,
 }: Params) {
   try {
@@ -21,7 +19,6 @@ export async function createThread({
     const createdThread = await Thread.create({
       text,
       author,
-      communityId: null,
     });
     ////Update user model
     await User.findByIdAndUpdate(author, {
@@ -69,7 +66,6 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 export async function fetchThreadById(id: string) {
   try {
     connectToDB();
-    ////Todo:Populate community
     const thread = await Thread.findById(id)
       .populate({
         path: "author",
