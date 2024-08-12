@@ -2,7 +2,6 @@ import React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-
 import "../globals.css";
 import LeftSidebar from "@/components/shared/LeftSidebar";
 import Bottombar from "@/components/shared/Bottombar";
@@ -13,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Threads",
-  description: "A Next.js 13 Meta Threads application",
+  description: "A Next.js 14 Meta Threads application",
 };
 
 export default function RootLayout({
@@ -22,14 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider
-      signInFallbackRedirectUrl={
-        process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL
-      }
-      signUpFallbackRedirectUrl={
-        process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL
-      }
-    >
+    <ClerkProvider>
       <html lang='en'>
         <body className={inter.className}>
           <Topbar />
