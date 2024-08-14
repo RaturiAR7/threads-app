@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import DeleteComponent from "../shared/DeleteComponent";
 
 interface Props {
   id: string;
@@ -98,6 +99,7 @@ function ThreadCard({
             </div>
           </div>
         </div>
+        {/* <DeleteComponent threadId={id} userId={currentUserId} /> */}
       </div>
     </article>
   );

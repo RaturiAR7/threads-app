@@ -14,12 +14,13 @@ const Page = async ({ params }: { params: { id: string } }) => {
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
   const thread = await fetchThreadById(params.id);
+  const threadId = thread._id.toString();
 
   return (
     <section className='relative'>
       <div>
         <ThreadCard
-          id={thread._id}
+          id={threadId}
           currentUserId={user?.id || ""}
           parentId={thread.parentId}
           content={thread.text}

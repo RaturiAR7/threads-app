@@ -9,11 +9,7 @@ interface Params {
   author: string;
   path: string;
 }
-export async function createThread({
-  text,
-  author,
-  path,
-}: Params) {
+export async function createThread({ text, author, path }: Params) {
   try {
     connectToDB();
     const createdThread = await Thread.create({
@@ -126,6 +122,30 @@ export async function addCommentToThread(
     ////Save the original thread
     await originalThread.save();
 
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Error saving comment ${error.message}`);
+  }
+}
+export async function deleteThread(
+  threadId: string,
+  path: string,
+  userId: string
+) {
+  try {
+    connectToDB();
+
+    await Thread.findOneAndDelete({
+      _id: threadId,
+    });
+    // if (userId) {
+    //   const filter = { _id: userId };
+    //   const updateDoc = {
+    //     $pull: { threads: threadId }, // Remove the item from the array
+    //   };
+    //   const options = { returnOriginal: false };
+    //   await User.findOneAndUpdate(filter, updateDoc, options);
+    // }
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Error saving comment ${error.message}`);
