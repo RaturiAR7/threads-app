@@ -5,15 +5,17 @@ import { redirect } from "next/navigation";
 
 async function Page() {
   const user = await currentUser();
-  if (!user) return null;
+  if (!user) redirect("/sign-up");
 
   const userInfo = await fetchUser(user.id);
-  if (!userInfo?.onboarded) redirect("/unboarding");
+  if (!userInfo?.onboarded) redirect("/onboarding");
+
+  const userId = userInfo._id.toString();
 
   return (
     <>
       <h1 className='head-text'>Create Thread</h1>
-      <PostThread userId={userInfo._id} />
+      <PostThread userId={userId} />
     </>
   );
 }

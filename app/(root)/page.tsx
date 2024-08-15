@@ -5,6 +5,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 export default async function Home() {
   const user = await currentUser();
+  if (!user) redirect("/sign-up");
   const result = await fetchPosts(1, 30);
   let userInfo;
   if (user?.id) userInfo = await fetchUser(user.id);
@@ -20,6 +21,7 @@ export default async function Home() {
           <>
             {result.posts.map((post) => (
               <ThreadCard
+                key={post._id}
                 id={post._id}
                 currentUserId={user?.id || ""}
                 parentId={post.parentId}
