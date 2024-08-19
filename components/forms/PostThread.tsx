@@ -17,6 +17,9 @@ import { Textarea } from "../ui/textarea";
 import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
 import Thread from "@/lib/models/thread.model";
+import { useEffect, useState } from "react";
+import * as tf from "@tensorflow/tfjs";
+import natural from "natural";
 
 interface Props {
   user: {
@@ -34,6 +37,9 @@ function PostThread({ userId }: { userId: string }) {
   const router = useRouter();
   const pathName = usePathname();
 
+  const [model, setModel] = useState(null);
+  const [predictionLoad, setPredictionLoad] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(ThreadValidation),
     defaultValues: {
@@ -41,15 +47,87 @@ function PostThread({ userId }: { userId: string }) {
       accountId: userId,
     },
   });
+  useEffect(() => {
+    const loadModel = async () => {
+      try {
+        console.log("Loading model...");
+        const loadedModel = await tf.loadLayersModel(
+          "/toxicityModel/model.json"
+        );
+        setModel(loadedModel);
+        console.log("Model loaded successfully:", loadedModel);
+      } catch (error) {
+        console.error("Error loading the model:", error);
+      }
+    };
+    // Load the model when the component mounts
+    console.log("Loading model");
+    loadModel();
+  }, []);
+
+  // Tokenize and pad function
+  function tokenizeAndPad(text, vocab, maxLength) {
+    // Tokenize: Split text by whitespace and map to vocabulary indices
+    const tokens = text
+      .toLowerCase()
+      .split(/\s+/)
+      .map((word) => vocab[word] || vocab["0"]); // Map words to indices, default to vocab["0"] if not found
+
+    // Pad or truncate the sequence to maxLength
+    const paddedTokens = tokens
+      .slice(0, maxLength)
+      .concat(Array(Math.max(maxLength - tokens.length, 0)).fill(vocab["0"])); // Pad with vocab["0"]
+
+    return paddedTokens;
+  }
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
-    await createThread({
-      text: values.thread,
-      author: userId,
-      path: pathName,
-    });
-    router.push("/");
+    predict(values.thread);
+    // await createThread({
+    //   text: values.thread,
+    //   author: userId,
+    //   path: pathName,
+    // });
+    // router.push("/");
   };
+  const loadVocabulary = async () => {
+    const response = await fetch("/vocabulary.json");
+    const vocab = await response.json();
+    console.log(vocab);
+    return vocab;
+  };
+
+  // Reshape and predict function
+  async function predict(text: string) {
+    if (!model) {
+      console.error("Model not loaded.");
+      return;
+    }
+    const vocab = await loadVocabulary();
+
+    // Tokenize, pad, and create a tensor
+    const maxLength = 1800;
+    const tokenizedText = tokenizeAndPad(text, vocab, maxLength);
+
+    if (tokenizedText.length !== maxLength) {
+      console.error(
+        `Tokenized text length is ${tokenizedText.length}, but expected ${maxLength}.`
+      );
+      return;
+    }
+
+    const inputTensor = tf.tensor2d([tokenizedText], [1, maxLength]); // Shape [1, 1800]
+
+    // Make prediction
+    const prediction = model.predict(inputTensor);
+
+    // Convert tensor to array
+    const predictionArray = await prediction.array();
+    console.log("Prediction:", predictionArray);
+
+    return predictionArray;
+  }
+
   return (
     <Form {...form}>
       <form
